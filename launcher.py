@@ -102,7 +102,7 @@ def main():
 
     if args.visualise:
         # w trybie wizualizacji wyswietl okno podgladu
-        from visualiser import visualise
+        from visualizer import visualise
         visualise(args.agent_factory, args.environments[0], args.size)
     else:
         # w zwyklym trybie uruchom agenta w kazdym srodowisku zadana liczbe razy i zlicz jego ruchy

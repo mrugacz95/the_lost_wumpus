@@ -30,10 +30,13 @@ class Agent:
         self.indices = [pos for pos, val in np.ndenumerate(self.map)]
         self.tiled_map = np.tile(self.map, (3, 3))
         self.tiled_exits = np.argwhere(self.tiled_map == World.EXIT)
-        self.tiled_caves = np.argwhere(self.tiled_map == World.CAVE)
+        self.exit = np.where(self.map == World.EXIT)
         self.caves = self.map == World.CAVE
         self.empty = np.invert(self.caves)
-        self.hist = np.full(self.map.shape, 1 / (self.width * self.height))
+        self.less = self.caves if len(self.caves) < len(self.empty) else self.empty
+        self.tiled_caves = np.argwhere(self.tiled_map == World.CAVE)
+        self.hist = np.full(self.map.shape, 1) #1 / (self.width * self.height))
+        self.hist[self.exit] = 0
         # self.hist = np.full((self.width, self.height), 0.01)
         # self.hist[0, self.height - 1] = 0.2
         self._update_hist()
@@ -48,6 +51,7 @@ class Agent:
         self._update_hist()
 
     def move(self):
+        self.hist[self.exit] = 0
         max_pos = np.argmax(self.hist)
         y, x = np.unravel_index(max_pos, self.hist.shape)
         pos = y + self.height, x + self.width
